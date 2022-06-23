@@ -1,6 +1,25 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { toolActions } from '../store/tools/duck'
+import toolSelector from '../store/tools/selector'
 import { BoxSearch, IconSearch, SearchTools } from './header/Header.styles'
 
 function Search() {
+  const dispatch = useDispatch()
+  const tools = useSelector(toolSelector.toolsSearch)
+  const isOnlyTag = useSelector(toolSelector.isOnlyTag)
+
+  const filterSearchTools = (value: string) => {
+    if (isOnlyTag) {
+      const filterByTag = tools.filter(tool =>
+        tool.tag.find(item => item.name.includes(value))
+      )
+      dispatch(toolActions.search(filterByTag))
+    } else {
+      const filterByName = tools.filter(tool => tool.name.includes(value))
+      dispatch(toolActions.search(filterByName))
+    }
+  }
+
   return (
     <BoxSearch>
       <IconSearch
@@ -24,7 +43,11 @@ function Search() {
         />
       </IconSearch>
 
-      <SearchTools type="search" placeholder="Search..." />
+      <SearchTools
+        type="search"
+        placeholder="Search..."
+        onChange={event => filterSearchTools(event.target.value)}
+      />
     </BoxSearch>
   )
 }

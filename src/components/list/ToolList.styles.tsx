@@ -35,8 +35,18 @@ export const DivTitleItem = styled.div`
   justify-content: space-between;
 `
 
-export const TitleItem = styled.h3`
+export const TitleItem = styled.a`
   font-size: 24px;
+  font-weight: 400;
+  color: #170c3a;
+
+  text-decoration: none;
+  transition: all 0.4s;
+
+  :hover {
+    text-decoration: underline;
+    transform: scale(1.05);
+  }
 `
 
 export const BoxRemove = styled.button`

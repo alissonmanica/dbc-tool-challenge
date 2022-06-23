@@ -1,8 +1,8 @@
 import { Provider } from 'react-redux'
 import configureStore from 'redux-mock-store'
-import { render, screen } from '@testing-library/react'
-import ToolList from './ToolList'
 import renderer from 'react-test-renderer'
+
+import Header from './Header'
 
 describe('snapshot testing', () => {
   const initialState = {
@@ -14,11 +14,11 @@ describe('snapshot testing', () => {
   const mockStore = configureStore()
   let store = mockStore(initialState)
 
-  it('should test snapshot for ToolList component', () => {
+  it('should test snapshot Header component', () => {
     const renderedComponent = renderer
       .create(
         <Provider store={store}>
-          <ToolList />
+          <Header />
         </Provider>
       )
       .toJSON()

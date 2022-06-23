@@ -20,6 +20,7 @@ import {
 import { Tool } from '../../models/ToolDTO'
 import { useEffect, useState } from 'react'
 import { Tag } from '../../models/TagDTO'
+import { useId } from 'react'
 
 const SignupSchema = Yup.object().shape({
   name: Yup.string()
@@ -38,20 +39,20 @@ function AddTool() {
   const dispatch = useDispatch()
   const tools = useSelector(toolSelector.get)
   const [tagTool, setTagTool] = useState([{}])
+  const id = useId()
 
   const getTags = (tools: Tool[]) => {
     const arrayTags = [{}]
-    tools.map(tool => {
-      tool.tag.map(tag => {
+    tools?.map(tool => {
+      tool.tag?.map(tag => {
         arrayTags.push({ value: tag.name, label: tag.name })
       })
     })
-    console.log(arrayTags)
     setTagTool(arrayTags)
   }
 
   const handleChange = (value: Tag[], setFieldValue: Function) => {
-    let list = value.map((item: any) => item.value)
+    let list = value?.map((item: any) => item.value)
     setFieldValue('tag', list)
   }
 
@@ -70,8 +71,18 @@ function AddTool() {
         }}
         validationSchema={SignupSchema}
         onSubmit={values => {
-          dispatch(toolActions.create(values))
-          console.log(values)
+          const { name, link, description, tag } = values
+          const toolItemValue = {
+            name,
+            link,
+            description,
+            tag: tag.map(item => {
+              return { id: id, name: item }
+            })
+          }
+
+          dispatch(toolActions.create(toolItemValue))
+          dispatch(toolActions.toggleOpenModalAdd())
         }}
       >
         {props => (
@@ -118,7 +129,7 @@ function AddTool() {
                     type="text"
                     id="link"
                     name="link"
-                    placeholder="Digite o link da ferramenta."
+                    placeholder="Digite o link da ferramenta. (ex: www.google.com)"
                   />
                   {props.errors.link && props.touched.link ? (
                     <DivError>{props.errors.link}</DivError>

@@ -8,8 +8,21 @@ import {
   TitleModal
 } from './Modal.styles'
 
-function RemoveTool() {
+function RemoveTool({
+  id,
+  name,
+  setOpenRemove
+}: {
+  id?: string
+  name?: string
+  setOpenRemove?: Function
+}) {
   const dispatch = useDispatch()
+
+  const removeToolFunction = () => {
+    dispatch(toolActions.remove(id))
+    setOpenRemove?.(false)
+  }
 
   return (
     <BackgroundModalTool>
@@ -32,18 +45,23 @@ function RemoveTool() {
           Remove tool
         </TitleModal>
 
-        <p>Are you sure you want to remove TOOL?</p>
+        <p>Are you sure you want to remove {name}?</p>
 
         <DivButtonsModal>
           <ButtonModal
-            onClick={() => dispatch(toolActions.toggleOpenModalRemove())}
+            onClick={() => setOpenRemove?.(false)}
             color="#365df0"
             background="#e1e7fd"
             type="button"
           >
             Cancel
           </ButtonModal>
-          <ButtonModal color="#ffffff" background="#365df0" type="button">
+          <ButtonModal
+            onClick={removeToolFunction}
+            color="#ffffff"
+            background="#365df0"
+            type="button"
+          >
             Yes, remove
           </ButtonModal>
         </DivButtonsModal>
